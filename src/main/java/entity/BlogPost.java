@@ -4,7 +4,7 @@ import logic.utils.Language;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,15 +14,15 @@ public class BlogPost {
     private String id;
     private User user;
     private Product product;
-    private Date postingTimeStamp;
-    private Language language;
+    private LocalDate postingTimeStamp;
+    private String language;
     private Map<String,Object> postContent;
 
     public BlogPost(){
         this.postContent=new HashMap<>();
     }
 
-    public BlogPost(User user, Product product, Date postingTimeStamp, Language language, Map<String,Object> postContent) {
+    public BlogPost(User user, Product product, LocalDate postingTimeStamp, String language, Map<String,Object> postContent) {
         this.user = user;
         this.product = product;
         this.postingTimeStamp = postingTimeStamp;
@@ -54,27 +54,27 @@ public class BlogPost {
         this.product = product;
     }
 
-    public Date getPostingTimeStamp() {
+    public LocalDate getPostingTimeStamp() {
         return postingTimeStamp;
     }
 
-    public void setPostingTimeStamp(Date postingTimeStamp) {
+    public void setPostingTimeStamp(LocalDate postingTimeStamp) {
         this.postingTimeStamp = postingTimeStamp;
     }
 
-    public Language getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
-    public Map getPostContent() {
+    public Map<String, Object> getPostContent() {
         return postContent;
     }
 
-    public void setPostContent(Map postContent) {
+    public void setPostContent(Map<String, Object> postContent) {
         this.postContent = postContent;
     }
 }
