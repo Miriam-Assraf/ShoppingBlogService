@@ -1,6 +1,6 @@
-package logic;
+package acs.logic;
 
-import entity.BlogPost;
+import acs.entity.BlogPost;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

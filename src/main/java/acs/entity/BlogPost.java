@@ -1,6 +1,5 @@
-package entity;
+package acs.entity;
 
-import logic.utils.Language;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

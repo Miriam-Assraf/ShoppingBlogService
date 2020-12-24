@@ -1,4 +1,4 @@
-package shoppingblogservice.demo;
+package acs.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

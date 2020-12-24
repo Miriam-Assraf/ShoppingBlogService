@@ -1,4 +1,4 @@
-package logic.utils;
+package acs.logic.utils;
 
 public enum FilterType {
     BY_LANGUAGE("byLanguage"),

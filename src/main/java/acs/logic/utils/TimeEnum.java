@@ -1,4 +1,4 @@
-package logic.utils;
+package acs.logic.utils;
 
 public enum TimeEnum {
     LAST_DAY("lastDay"),

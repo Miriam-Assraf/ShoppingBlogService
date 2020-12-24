@@ -1,8 +1,9 @@
-package dao;
+package acs.dao;
 
-import entity.BlogPost;
+import acs.entity.BlogPost;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import reactor.core.publisher.Flux;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 public interface BlogDao extends ReactiveSortingRepository<BlogPost, String> {
     // find all
-    Flux<BlogPost> findAll(final Pageable page);
+//    Flux<BlogPost> findAll(Pageable page);
     Flux<BlogPost> findAllByPostingTimeStampAfter(Sort by, @Param("fromDate") LocalDate fromDate);
 
     // find all by user

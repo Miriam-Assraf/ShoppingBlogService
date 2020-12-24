@@ -1,4 +1,4 @@
-package logic;
+package acs.logic;
 
 public interface EnhancedBlogPostService extends BlogPostService{
     void deleteAll();

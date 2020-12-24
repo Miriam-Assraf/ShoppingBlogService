@@ -1,10 +1,10 @@
-package logic.db;
+package acs.logic.db;
 
-import dao.BlogDao;
-import entity.BlogPost;
-import logic.EnhancedBlogPostService;
-import logic.utils.FilterType;
-import logic.utils.TimeEnum;
+import acs.dao.BlogDao;
+import acs.entity.BlogPost;
+import acs.logic.EnhancedBlogPostService;
+import acs.logic.utils.FilterType;
+import acs.logic.utils.TimeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @Service
 public class BlogPostServiceWithDB implements EnhancedBlogPostService {
-    private final BlogDao blogDao;
+    private BlogDao blogDao;
 
     @Autowired
     public BlogPostServiceWithDB(BlogDao blogDao) {
