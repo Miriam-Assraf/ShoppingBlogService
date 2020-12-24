@@ -3,7 +3,8 @@ package acs.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class BlogPost {
     private String id;
     private User user;
     private Product product;
-    private LocalDate postingTimeStamp;
+    private Date postingTimeStamp;
     private String language;
     private Map<String,Object> postContent;
 
@@ -21,7 +22,7 @@ public class BlogPost {
         this.postContent=new HashMap<>();
     }
 
-    public BlogPost(User user, Product product, LocalDate postingTimeStamp, String language, Map<String,Object> postContent) {
+    public BlogPost(User user, Product product, Date postingTimeStamp, String language, Map<String,Object> postContent) {
         this.user = user;
         this.product = product;
         this.postingTimeStamp = postingTimeStamp;
@@ -53,11 +54,11 @@ public class BlogPost {
         this.product = product;
     }
 
-    public LocalDate getPostingTimeStamp() {
+    public Date getPostingTimeStamp() {
         return postingTimeStamp;
     }
 
-    public void setPostingTimeStamp(LocalDate postingTimeStamp) {
+    public void setPostingTimeStamp(Date postingTimeStamp) {
         this.postingTimeStamp = postingTimeStamp;
     }
 

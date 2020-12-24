@@ -10,7 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Service
 public class BlogPostServiceWithDB implements EnhancedBlogPostService {
@@ -32,12 +35,12 @@ public class BlogPostServiceWithDB implements EnhancedBlogPostService {
         if(filterBy!=null &&filterValue!=null)
         {
             // byCreation
-            if(filterBy.equals(FilterType.BY_CREATION.toString())) {
-                LocalDate fromDate = getFromDate(filterValue);
-                if (fromDate != null) {
-                    return this.blogDao.findAllByPostingTimeStampAfter(Sort.by(sortOrder, sortBy), fromDate);
-                }
-            }
+//            if(filterBy.equals(FilterType.BY_CREATION.toString())) {
+//                LocalDate fromDate = getFromDate(filterValue);
+//                if (fromDate != null) {
+//                    return this.blogDao.findAllByPostingTimeStampAfter(Sort.by(sortOrder, sortBy), fromDate);
+//                }
+//            }
             // byCount
             /*else if(filterBy.equals(FilterType.BY_COUNT.toString())){
                 return this.blogDao.findAll(PageRequest.of(page(?), Integer.parseInt(filterValue), Sort.Direction.valueOf(sortOrder), "postingTimeStamp",sortBy));
@@ -55,7 +58,7 @@ public class BlogPostServiceWithDB implements EnhancedBlogPostService {
             }
             // byCreation
             if (filterBy.equals(FilterType.BY_CREATION.toString())) {
-                LocalDate fromDate = getFromDate(filterValue);
+                Date fromDate = Date.from(Instant.parse(filterValue));
                 if(fromDate!=null){
                     return this.blogDao.findAllByUser_Email_AndPostingTimeStampAfter(Sort.by(sortOrder, sortBy), email, fromDate);
                 }
@@ -76,32 +79,32 @@ public class BlogPostServiceWithDB implements EnhancedBlogPostService {
                 return this.blogDao.findAllByProduct_Id_AndLanguage(Sort.by(sortOrder, sortBy), productId, filterValue);
             }
             // byCreation
-            if(filterBy.equals((FilterType.BY_CREATION).toString())){
-                LocalDate fromDate = getFromDate(filterValue);
-                if(fromDate!=null) {
-                    return this.blogDao.findAllByProduct_Id_AndPostingTimeStampAfter(Sort.by(sortOrder, sortBy), productId, fromDate);
-                }
-            }
+//            if(filterBy.equals((FilterType.BY_CREATION).toString())){
+//                LocalDate fromDate = getFromDate(filterValue);
+//                if(fromDate!=null) {
+//                    return this.blogDao.findAllByProduct_Id_AndPostingTimeStampAfter(Sort.by(sortOrder, sortBy), productId, fromDate);
+//                }
+//            }
         }
         return this.blogDao.findAllByProduct_Id(Sort.by(sortOrder, sortBy), productId);
     }
 
     @Override
-    public void deleteAll() {
-        blogDao.deleteAll();
+    public Mono<Void> deleteAll() {
+        return blogDao.deleteAll();
     }
 
-    private LocalDate getFromDate(String timeEnum){
-        LocalDate fromDate=null;
-        if(timeEnum.equals(TimeEnum.LAST_DAY.toString())){
-            fromDate = LocalDate.now().minusDays(1);
-        }
-        else if(timeEnum.equals(TimeEnum.LAST_WEEK.toString())){
-            fromDate = LocalDate.now().minusDays(7);
-        }
-        else if(timeEnum.equals(TimeEnum.LAST_MONTH.toString())){
-            fromDate = LocalDate.now().minusDays(30);
-        }
-        return fromDate;
-    }
+//    private Date getFromDate(String timeEnum){
+//        Date fromDate=null;
+//        if(timeEnum.equals(TimeEnum.LAST_DAY.toString())){
+//            fromDate = Date().minusDays(1);
+//        }
+//        else if(timeEnum.equals(TimeEnum.LAST_WEEK.toString())){
+//            fromDate = Date.now().minusDays(7);
+//        }
+//        else if(timeEnum.equals(TimeEnum.LAST_MONTH.toString())){
+//            fromDate = Date.now().minusDays(30);
+//        }
+//        return fromDate;
+//    }
 }

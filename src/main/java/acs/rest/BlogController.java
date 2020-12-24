@@ -13,7 +13,7 @@ public class BlogController {
     private BlogPostService blogService;
 
     @Autowired
-    public void setMessageService(BlogPostService blogService) {
+    public void setBlogPostService(BlogPostService blogService) {
         this.blogService=blogService;
     }
 
@@ -22,7 +22,7 @@ public class BlogController {
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<BlogPost> createMessage(@RequestBody BlogPost blogPost) {
+    public Mono<BlogPost> createPost(@RequestBody BlogPost blogPost) {
         return this.blogService.createPost(blogPost);
     }
 
@@ -39,7 +39,6 @@ public class BlogController {
             @RequestParam(name = "filterValue", required = false) String filterValue,
             @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy,
             @RequestParam(name = "sortOrder", required = false, defaultValue = "ASC") String sortOrder) {
-
         return this.blogService.getAllByUser(email, filterBy, filterValue, sortBy, sortOrder);
     }
 
