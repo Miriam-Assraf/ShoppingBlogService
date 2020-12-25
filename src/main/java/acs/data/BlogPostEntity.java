@@ -1,27 +1,29 @@
-package acs.entity;
+package acs.data;
 
+import acs.exceptions.BadRequestException;
+import acs.utils.Product;
+import acs.utils.User;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Document
-public class BlogPost {
+public class BlogPostEntity {
     @Id
     private String id;
     private User user;
     private Product product;
-    private LocalDate postingTimeStamp;
+    private Date postingTimeStamp;
     private String language;
     private Map<String,Object> postContent;
 
-    public BlogPost(){
+    public BlogPostEntity(){
         this.postContent=new HashMap<>();
     }
 
-    public BlogPost(User user, Product product, LocalDate postingTimeStamp, String language, Map<String,Object> postContent) {
+    public BlogPostEntity(User user, Product product, Date postingTimeStamp, String language, Map<String,Object> postContent) {
         this.user = user;
         this.product = product;
         this.postingTimeStamp = postingTimeStamp;
@@ -42,6 +44,9 @@ public class BlogPost {
     }
 
     public void setUser(User user) {
+        if (user == null){
+            throw new BadRequestException("user must be specified");
+        }
         this.user = user;
     }
 
@@ -50,14 +55,17 @@ public class BlogPost {
     }
 
     public void setProduct(Product product) {
+        if (product == null){
+            throw new BadRequestException("product must be specified");
+        }
         this.product = product;
     }
 
-    public LocalDate getPostingTimeStamp() {
+    public Date getPostingTimeStamp() {
         return postingTimeStamp;
     }
 
-    public void setPostingTimeStamp(LocalDate postingTimeStamp) {
+    public void setPostingTimeStamp(Date postingTimeStamp) {
         this.postingTimeStamp = postingTimeStamp;
     }
 

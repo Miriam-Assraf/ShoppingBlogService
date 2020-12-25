@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class AdminController {
@@ -20,8 +21,8 @@ public class AdminController {
 
     @RequestMapping(path = "/blog",
             method = RequestMethod.DELETE)
-    public void deleteAllShopping() {
-        this.enhancedBlogPostService.deleteAll();
+    public Mono<Void> deleteAllShopping() {
+        return this.enhancedBlogPostService.deleteAll();
     }
 
 }

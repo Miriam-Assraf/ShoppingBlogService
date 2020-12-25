@@ -1,5 +1,7 @@
 package acs.logic;
 
+import reactor.core.publisher.Mono;
+
 public interface EnhancedBlogPostService extends BlogPostService{
-    void deleteAll();
+    Mono<Void> deleteAll();
 }

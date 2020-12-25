@@ -1,4 +1,4 @@
-package acs.entity;
+package acs.utils;
 
 public class User {
     private String email;
@@ -10,7 +10,7 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
