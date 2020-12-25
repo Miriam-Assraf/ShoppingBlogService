@@ -1,92 +1,105 @@
 package acs.logic.db;
 
+import acs.boundary.BlogPostBoundary;
 import acs.dao.BlogDao;
-import acs.entity.BlogPost;
+import acs.exceptions.BadRequestException;
 import acs.logic.EnhancedBlogPostService;
-import acs.logic.utils.FilterType;
-import acs.logic.utils.TimeEnum;
+import acs.logic.utils.*;
+import acs.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Service
 public class BlogPostServiceWithDB implements EnhancedBlogPostService {
     private BlogDao blogDao;
+    private BlogPostConverter converter;
 
     @Autowired
-    public BlogPostServiceWithDB(BlogDao blogDao) {
+    public BlogPostServiceWithDB(BlogDao blogDao, BlogPostConverter converter) {
         super();
+        this.converter = converter;
         this.blogDao = blogDao;
     }
 
     @Override
-    public Mono<BlogPost> createPost(BlogPost post) {
-        return this.blogDao.save(post);
+    public Mono<BlogPostBoundary> createPost(BlogPostBoundary post) {
+        return this.blogDao.save(converter.toEntity(post)).map(this.converter::fromEntity);
     }
 
     @Override
-    public Flux<BlogPost> getAll(String filterBy, String filterValue, String sortBy, String sortOrder) {
-        if(filterBy!=null &&filterValue!=null)
-        {
+    public Flux<BlogPostBoundary> getAll(FilterTypePartial filterType, String filterValue, String sortBy, SortOrder sortOrder) {
+
+        Sort.Direction direction = sortOrder == SortOrder.ASC ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        if(filterType!=null &&filterValue!=null) {
             // byCreation
-//            if(filterBy.equals(FilterType.BY_CREATION.toString())) {
-//                LocalDate fromDate = getFromDate(filterValue);
-//                if (fromDate != null) {
-//                    return this.blogDao.findAllByPostingTimeStampAfter(Sort.by(sortOrder, sortBy), fromDate);
-//                }
-//            }
+            if (filterType.equals(FilterTypePartial.BY_CREATION)) {
+                return this.blogDao.findAllByPostingTimeStampBetween(Sort.by(direction,
+                        sortBy), getFromDate(filterValue), new Date()).map(this.converter::fromEntity);
+            }
             // byCount
-            /*else if(filterBy.equals(FilterType.BY_COUNT.toString())){
-                return this.blogDao.findAll(PageRequest.of(page(?), Integer.parseInt(filterValue), Sort.Direction.valueOf(sortOrder), "postingTimeStamp",sortBy));
-            }*/
+            if(filterType.equals(FilterTypePartial.BY_COUNT)){
+                long count = Long.parseLong(filterValue);
+                if(count <= 0){
+                    throw new BadRequestException("count must be greater than zero");
+                }
+                return this.blogDao.findAll(Sort.by(Sort.Direction.DESC,
+                        Constants.POSTING_TIME_STAMP)).limitRequest(count).map(this.converter::fromEntity);
+            }
         }
-        return this.blogDao.findAll(Sort.by(sortOrder, sortBy));
+        return this.blogDao.findAll(Sort.by(direction, sortBy))
+                .map(this.converter::fromEntity);
     }
 
     @Override
-    public Flux<BlogPost> getAllByUser(String email, String filterBy, String filterValue, String sortBy, String sortOrder) {
-        if (filterBy != null && filterValue != null) {
+    public Flux<BlogPostBoundary> getAllByUser(String email, FilterType filterType, String filterValue, String sortBy, SortOrder sortOrder) {
+        Sort.Direction direction = sortOrder == SortOrder.ASC ? Sort.Direction.ASC : Sort.Direction.DESC;
+        if (filterType != null && filterValue != null) {
             // byLanguage
-            if (filterBy.equals(FilterType.BY_LANGUAGE.toString())) {
-                return this.blogDao.findAllByUser_Email_AndLanguage(Sort.by(sortOrder, sortBy), email, filterValue);
+            if (filterType.equals(FilterType.BY_LANGUAGE)) {
+                System.out.println("simba3");
+                return this.blogDao.findAllByUser_Email_AndLanguage(Sort.by(
+                        direction,
+                        sortBy), email, filterValue).map(this.converter::fromEntity);
             }
             // byCreation
-            if (filterBy.equals(FilterType.BY_CREATION.toString())) {
-                Date fromDate = Date.from(Instant.parse(filterValue));
-                if(fromDate!=null){
-                    return this.blogDao.findAllByUser_Email_AndPostingTimeStampAfter(Sort.by(sortOrder, sortBy), email, fromDate);
-                }
+            if (filterType.equals(FilterType.BY_CREATION)) {
+                return this.blogDao.findAllByUser_Email_AndPostingTimeStampBetween(Sort.by(direction,
+                        sortBy), email, getFromDate(filterValue), new Date()).map(this.converter::fromEntity);
             }
             // byProduct
-            if (filterBy.equals(FilterType.BY_PRODUCT.toString())) {
-                return this.blogDao.findAllByUser_Email_AndProduct_Id(Sort.by(sortOrder, sortBy), email, filterValue);
+            if (filterType.equals(FilterType.BY_PRODUCT)) {
+                return this.blogDao.findAllByUser_Email_AndProduct_Id(Sort.by(direction,
+                        sortBy), email, filterValue).map(this.converter::fromEntity);
             }
         }
-        return this.blogDao.findAllByUser_Email(Sort.by(sortOrder, sortBy), email);
+        return this.blogDao.findAllByUser_Email(Sort.by(direction,
+                sortBy), email).map(this.converter::fromEntity);
     }
 
     @Override
-    public Flux<BlogPost> getAllByProduct(String productId, String filterBy, String filterValue, String sortBy, String sortOrder) {
-        if(filterBy!=null&&filterValue!=null){
+    public Flux<BlogPostBoundary> getAllByProduct(String productId, FilterType filterType, String filterValue, String sortBy, SortOrder sortOrder) {
+        Sort.Direction direction = sortOrder == SortOrder.ASC ? Sort.Direction.ASC : Sort.Direction.DESC;
+        if(filterType!=null&&filterValue!=null){
             // byLanguage
-            if(filterBy.equals(FilterType.BY_LANGUAGE.toString())){
-                return this.blogDao.findAllByProduct_Id_AndLanguage(Sort.by(sortOrder, sortBy), productId, filterValue);
+            if(filterType.equals(FilterType.BY_LANGUAGE)){
+                return this.blogDao.findAllByProduct_Id_AndLanguage(Sort.by(direction,
+                        sortBy), productId, filterValue).map(this.converter::fromEntity);
             }
             // byCreation
-//            if(filterBy.equals((FilterType.BY_CREATION).toString())){
-//                LocalDate fromDate = getFromDate(filterValue);
-//                if(fromDate!=null) {
-//                    return this.blogDao.findAllByProduct_Id_AndPostingTimeStampAfter(Sort.by(sortOrder, sortBy), productId, fromDate);
-//                }
-//            }
+            if(filterType.equals((FilterType.BY_CREATION))){
+                return this.blogDao.findAllByProduct_Id_AndPostingTimeStampBetween(Sort.by(direction,
+                        sortBy), productId, getFromDate(filterValue), new Date()).map(this.converter::fromEntity);
+            }
         }
-        return this.blogDao.findAllByProduct_Id(Sort.by(sortOrder, sortBy), productId);
+        return this.blogDao.findAllByProduct_Id(Sort.by(direction,
+                sortBy), productId).map(this.converter::fromEntity);
     }
 
     @Override
@@ -94,17 +107,18 @@ public class BlogPostServiceWithDB implements EnhancedBlogPostService {
         return blogDao.deleteAll();
     }
 
-//    private Date getFromDate(String timeEnum){
-//        Date fromDate=null;
-//        if(timeEnum.equals(TimeEnum.LAST_DAY.toString())){
-//            fromDate = Date().minusDays(1);
-//        }
-//        else if(timeEnum.equals(TimeEnum.LAST_WEEK.toString())){
-//            fromDate = Date.now().minusDays(7);
-//        }
-//        else if(timeEnum.equals(TimeEnum.LAST_MONTH.toString())){
-//            fromDate = Date.now().minusDays(30);
-//        }
-//        return fromDate;
-//    }
+    private Date getFromDate(String timeEnum){
+        LocalDateTime localDateTime = LocalDateTime.now();
+        if(timeEnum.equals(TimeEnum.LAST_DAY.toString())){
+            localDateTime = localDateTime.minusDays(1);
+        }
+        else if(timeEnum.equals(TimeEnum.LAST_WEEK.toString())){
+            localDateTime = localDateTime.minusDays(7);
+        }
+        else if(timeEnum.equals(TimeEnum.LAST_MONTH.toString())){
+            localDateTime = localDateTime.minusDays(30);
+        }
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+    }
 }

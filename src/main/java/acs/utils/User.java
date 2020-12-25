@@ -1,4 +1,4 @@
-package acs.entity;
+package acs.utils;
 
 public class User {
     private String email;

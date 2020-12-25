@@ -1,16 +1,20 @@
 package acs.logic;
 
-import acs.entity.BlogPost;
+import acs.boundary.BlogPostBoundary;
+import acs.data.BlogPostEntity;
+import acs.logic.utils.FilterType;
+import acs.logic.utils.FilterTypePartial;
+import acs.logic.utils.SortOrder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface BlogPostService {
-    Mono<BlogPost> createPost (BlogPost post);
+    Mono<BlogPostBoundary> createPost (BlogPostBoundary post);
 
-    Flux<BlogPost> getAll (String filterBy, String filterValue, String sortBy, String sortOrder);
+    Flux<BlogPostBoundary> getAll (FilterTypePartial filterType, String filterValue, String sortBy, SortOrder sortOrder);
 
-    Flux<BlogPost> getAllByUser(String email, String filterBy, String filterValue, String sortBy, String sortOrder);
+    Flux<BlogPostBoundary> getAllByUser(String email, FilterType filterType, String filterValue, String sortBy, SortOrder sortOrder);
 
-    Flux<BlogPost> getAllByProduct(String productId, String filterBy, String filterValue, String sortBy, String sortOrder);
+    Flux<BlogPostBoundary> getAllByProduct(String productId, FilterType filterType, String filterValue, String sortBy, SortOrder sortOrder);
 }
 
