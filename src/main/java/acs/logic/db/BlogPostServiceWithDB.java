@@ -63,7 +63,6 @@ public class BlogPostServiceWithDB implements EnhancedBlogPostService {
         if (filterType != null && filterValue != null) {
             // byLanguage
             if (filterType.equals(FilterType.BY_LANGUAGE)) {
-                System.out.println("simba3");
                 return this.blogDao.findAllByUser_Email_AndLanguage(Sort.by(
                         direction,
                         sortBy), email, filterValue).map(this.converter::fromEntity);

@@ -1,7 +1,6 @@
 package acs.logic;
 
 import acs.boundary.BlogPostBoundary;
-import acs.data.BlogPostEntity;
 import acs.logic.utils.FilterType;
 import acs.logic.utils.FilterTypePartial;
 import acs.logic.utils.SortOrder;

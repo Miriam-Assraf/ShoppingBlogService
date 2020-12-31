@@ -47,6 +47,7 @@ public class BlogPostEntity {
         if (user == null){
             throw new BadRequestException("user must be specified");
         }
+        user.validate();
         this.user = user;
     }
 
