@@ -30,15 +30,6 @@ public class BlogController {
         return this.blogService.createPost(blogPostBoundary);
     }
 
-    // GET /blog get boundary returns Mono
-    @RequestMapping(path = "/blog/{blogId}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<BlogPostBoundary> getBlog(@PathVariable String blogId) {
-        return this.blogService.getBlog(blogId);
-    }
-
-
     // GET /blog/byUser/{email}?sortBy={sortArrt}&sortOrder={order}
     // GET /blog/byUser/{email}?filterType=byLanguage&filterValue={language}&sortBy={sortArrt}&sortOrder={order}
     // GET /blog/byUser/{email}?filterType=byCreation&filterValue={timeEnum}&sortBy={sortArrt}&sortOrder={order}

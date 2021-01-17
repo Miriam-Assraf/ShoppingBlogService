@@ -27,10 +27,6 @@ public class BlogPostServiceWithDB implements EnhancedBlogPostService {
         this.blogDao = blogDao;
     }
 
-    @Override
-    public Mono<BlogPostBoundary> getBlog(String blogId) {
-        return this.blogDao.findById(blogId).map(this.converter::fromEntity);
-    }
 
     @Override
     public Mono<BlogPostBoundary> createPost(BlogPostBoundary post) {
