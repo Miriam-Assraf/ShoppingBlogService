@@ -8,6 +8,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface BlogPostService {
+
+    Mono<BlogPostBoundary> getBlog (String blogId);
+
     Mono<BlogPostBoundary> createPost (BlogPostBoundary post);
 
     Flux<BlogPostBoundary> getAll (FilterTypePartial filterType, String filterValue, String sortBy, SortOrder sortOrder);
